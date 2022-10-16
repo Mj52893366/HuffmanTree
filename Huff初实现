@@ -1,14 +1,19 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <string>
+#include <cstring>
+
 using namespace std;
 
 typedef struct {
-    int weight;
+    double weight;
     int parent,lchild,rchild;
+    char ch;
 }HTNode,*HuffmanTree;
 typedef char **HuffmanCode;
 
 void Select(HuffmanTree &HT,int s,int *s1,int *s2){
-    int min1 = 9999, min2=9999,temp;
+    double min1 = 9999, min2=9999;
+    double temp;
     for (int i = 1; i <= s; ++i)
     {
         if (HT[i].parent == 0){
@@ -18,7 +23,7 @@ void Select(HuffmanTree &HT,int s,int *s1,int *s2){
                     min2 = HT[i].weight;          //如果比min1还小,则让min2 = min1, 这个新的数等于min1
                     *s2 = i;
                 } else{
-                    int min = min1;
+                    double min = min1;
                     min1 = HT[i].weight;
                     min2 = min;
                     *s2 = *s1;
@@ -28,10 +33,10 @@ void Select(HuffmanTree &HT,int s,int *s1,int *s2){
         }
     }
 }
-void Print(HuffmanTree &HT,int s,int m){
+void Print(HuffmanTree &HT,HuffmanCode &HC,int m){
     for (int i = 1; i <= m ; ++i)
     {
-        cout<<i<<" "<<HT[i].weight<<" "<<HT[i].parent<<" "<<HT[i].lchild<<" "<<HT[i].rchild<<endl;
+        cout<<"The "<<HT[i].ch<<" 's Huffman code is:"<<HC[i]<<endl;
     }
 }
 void CreatHuffmanTree(HuffmanTree &HT,int n){
@@ -42,6 +47,13 @@ void CreatHuffmanTree(HuffmanTree &HT,int n){
     for (int i = 1; i <=m ; ++i)          //初始化
     {
         HT[i].parent = 0;HT[i].lchild = 0;HT[i].rchild = 0;
+    }
+    char a[30];
+    cin>>a;
+    int l = strlen(a);
+    for (int i = 1; i <= l; ++i)
+    {
+        HT[i].ch = a[i-1];
     }
     for (int i = 1; i <= n; ++i)          //初始化权
     {
@@ -55,10 +67,9 @@ void CreatHuffmanTree(HuffmanTree &HT,int n){
         HT[i].weight = HT[s1].weight + HT[s2].weight;     //当前权重等于两个小树和
         HT[i].lchild = s1;HT[i].rchild = s2;        //当前树左右孩子
     }
-    Print(HT,n+1,m);
 }
-void CreatHuffmanCode(HuffmanTree &HT,HuffmanCode,int n){
-    HuffmanCode HC = new char* [n+1];
+void CreatHuffmanCode(HuffmanTree &HT,HuffmanCode &HC,int n){
+    HC = new char* [n+1];
     char *cd = new char[n];
     cd[n-1] = '\0';
     for (int i = 1; i <= n ; ++i)
@@ -74,11 +85,20 @@ void CreatHuffmanCode(HuffmanTree &HT,HuffmanCode,int n){
         strcpy(HC[i],&cd[start]);
     }
 }
-
+void Print1(HuffmanTree &HT,int m){
+    for (int i = 1; i <= m ; ++i)
+    {
+        cout<<i<<" "<<HT[i].weight<<" "<<HT[i].parent<<" "<<HT[i].lchild<<" "<<HT[i].rchild<<endl;
+    }
+}
 int main()
 {
     HuffmanTree HT;
     int n;
     cin>>n;
     CreatHuffmanTree(HT,n);
+    HuffmanCode HC;
+    CreatHuffmanCode(HT,HC,n);
+//    Print1(HT,2*n-1);
+    Print(HT, HC, n);
 }
