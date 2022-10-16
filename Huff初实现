@@ -9,13 +9,13 @@ typedef struct {
 
 void Select(HuffmanTree &HT,int s,int *s1,int *s2){
     int min1 = 9999, min2=9999,temp;
-    for (int i = 1; i <= s; ++i)
+    for (int i = 1; i <= s; ++i)                
     {
         if (HT[i].parent == 0){
             temp = HT[i].weight;
-            if (temp<min2){
-                if (temp>min1){
-                    min2 = HT[i].weight;
+            if (temp<min2){                   //先得到一个最小的  min1
+                if (temp>min1){                 //如果下一个数小于min2但比min1的大  那么直接等于min2
+                    min2 = HT[i].weight;          //如果比min1还小,则让min2 = min1, 这个新的数等于min1
                     *s2 = i;
                 } else{
                     int min = min1;
@@ -36,24 +36,24 @@ void Print(HuffmanTree &HT,int s,int m){
 }
 void CreatHuffmanTree(HuffmanTree &HT,int n){
     if (n <= 1) return;
-    int m;
+    int m;                 //数组数量
     m = 2*n-1;
-    HT = new HTNode [m+1];
-    for (int i = 1; i <=m ; ++i)
+    HT = new HTNode [m+1];                //分配空间
+    for (int i = 1; i <=m ; ++i)          //初始化
     {
         HT[i].parent = 0;HT[i].lchild = 0;HT[i].rchild = 0;
     }
-    for (int i = 1; i <= n; ++i)
+    for (int i = 1; i <= n; ++i)          //初始化权
     {
         cin>>HT[i].weight;
     }
-    for (int i = n+1; i <= m ; ++i)
+    for (int i = n+1; i <= m ; ++i)        //新建树
     {
-        int s1,s2;
-        Select(HT,i-1,&s1,&s2);
-        HT[s1].parent = i;HT[s2].parent = i;
-        HT[i].weight = HT[s1].weight + HT[s2].weight;
-        HT[i].lchild = s1;HT[i].rchild = s2;
+        int s1,s2;                        
+        Select(HT,i-1,&s1,&s2);            //选出两棵最小树
+        HT[s1].parent = i;HT[s2].parent = i;    //两个小数的双亲等于当前
+        HT[i].weight = HT[s1].weight + HT[s2].weight;     //当前权重等于两个小树和
+        HT[i].lchild = s1;HT[i].rchild = s2;        //当前树左右孩子
     }
     Print(HT,n+1,m);
 }
