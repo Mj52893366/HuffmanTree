@@ -5,11 +5,11 @@ typedef struct {
     int weight;
     int parent,lchild,rchild;
 }HTNode,*HuffmanTree;
-
+typedef char **HuffmanCode;
 
 void Select(HuffmanTree &HT,int s,int *s1,int *s2){
     int min1 = 9999, min2=9999,temp;
-    for (int i = 1; i <= s; ++i)                
+    for (int i = 1; i <= s; ++i)
     {
         if (HT[i].parent == 0){
             temp = HT[i].weight;
@@ -49,7 +49,7 @@ void CreatHuffmanTree(HuffmanTree &HT,int n){
     }
     for (int i = n+1; i <= m ; ++i)        //新建树
     {
-        int s1,s2;                        
+        int s1,s2;
         Select(HT,i-1,&s1,&s2);            //选出两棵最小树
         HT[s1].parent = i;HT[s2].parent = i;    //两个小数的双亲等于当前
         HT[i].weight = HT[s1].weight + HT[s2].weight;     //当前权重等于两个小树和
@@ -57,7 +57,23 @@ void CreatHuffmanTree(HuffmanTree &HT,int n){
     }
     Print(HT,n+1,m);
 }
-
+void CreatHuffmanCode(HuffmanTree &HT,HuffmanCode,int n){
+    HuffmanCode HC = new char* [n+1];
+    char *cd = new char[n];
+    cd[n-1] = '\0';
+    for (int i = 1; i <= n ; ++i)
+    {
+        int start = n-1,c = i,f = HT[i].parent;
+        while (f!=0){
+            --start;
+            if (HT[f].lchild == c) cd[start] = '0';
+            else cd[start] = '1';
+            c = f;f = HT[f].parent;
+        }
+        HC[i] = new char[n-start];
+        strcpy(HC[i],&cd[start]);
+    }
+}
 
 int main()
 {
